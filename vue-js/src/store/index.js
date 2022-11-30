@@ -5,14 +5,6 @@ import { ordersModule } from '@/store/ordersModule'
 import { basketModule } from '@/store/basketModule'
 
 export default createStore({
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
   modules: {
     catalog: catalogModule,
     user: userModule,

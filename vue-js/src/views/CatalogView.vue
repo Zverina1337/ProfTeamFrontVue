@@ -1,11 +1,12 @@
 <template>
-  <div class="container">
-    <items-list :items='$store.getters.getCatalog'/>
+  <div class="container py-3">
+    <products-list :items='$store.getters.getCatalog' />
   </div>
 </template>
 
 <script>
-import ItemsList from '@/components/ItemsList'
+import ProductsList from '@/components/ProductsList'
+import { mapActions } from 'vuex'
 
 export default {
   data () {
@@ -13,7 +14,15 @@ export default {
     }
   },
   components: {
-    ItemsList
+    ProductsList
+  },
+  methods: {
+    ...mapActions({
+      fetchProducts: 'fetchProducts'
+    })
+  },
+  mounted () {
+    this.fetchProducts()
   }
 }
 </script>
