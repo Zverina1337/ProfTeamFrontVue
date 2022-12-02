@@ -1,11 +1,12 @@
-import axios from 'axios'
+import { $host } from '@/http'
 
 export const catalogModule = {
   state: () => ({
     catalog: [],
     pages: 0,
     currentPage: 1,
-    isProductsLoading: true
+    isProductsLoading: true,
+    limit: 6
   }),
   getters: {
     getCatalog (state) {
@@ -23,31 +24,49 @@ export const catalogModule = {
   },
   mutations: {
     setCatalog (state, newValue) {
-      state.catalog = [...newValue]
+      state.catalog = newValue
     },
     setPages (state, newValue) {
       state.pages = newValue
     },
     incrementCurrentPage (state) {
-      state.currentPage++
+      if (state.currentPage <= state.pages) {
+        state.currentPage++
+      }
     },
     decrementCurrentPage (state) {
-      state.currentPage--
+      if (state.currentPage > 1) {
+        state.currentPage--
+      }
     },
     setIsProductsLoading (state, bool) {
       state.isProductsLoading = bool
+    },
+    setLimit (state, newValue) {
+      state.limit = newValue
+    },
+    setCurrentPage (state, newValue) {
+      state.currentPage = newValue
     }
   },
   actions: {
     async fetchProducts ({ state, commit }) {
       try {
-        const response = await axios.get('https://jurapro.bhuser.ru/api-samohod/products')
-        const limit = 6
-        commit('setCatalog', response.data.content)
-        commit('setPages', Math.ceil(response.data.content.length / limit))
-        commit('setIsProductsLoading', false)
+        const response = await $host.get(process.env.VUE_APP_API_URL + '/products')
+        const data = response.data.content
+
+        commit('setLimit', state.limit)
+        commit('setPages', Math.ceil(response.data.content.length / state.limit))
+
+        const startItem = (state.currentPage - 1) * state.limit
+        const lastItem = startItem + state.limit
+
+        commit('setCatalog', data.slice(startItem, lastItem)
+        )
       } catch (e) {
         console.log(e)
+      } finally {
+        commit('setIsProductsLoading', false)
       }
     }
   }

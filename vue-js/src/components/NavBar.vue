@@ -6,23 +6,34 @@
       </a>
 
       <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-        <a class="me-3 py-2 text-dark text-decoration-none" href="#">Регистрация</a>
-        <a class="me-3 py-2 text-dark text-decoration-none" href="#">Авторизация</a>
-        <a class="me-3 py-2 text-dark text-decoration-none" href="#">Мои заказы</a>
-        <a class="me-3 py-2 text-dark text-decoration-none" href="#">Корзина</a>
+        <router-link to="signup" class="me-3 py-2 text-dark text-decoration-none" v-show="!isAuth()">Регистрация</router-link>
+        <router-link to="login" class="me-3 py-2 text-dark text-decoration-none" v-show="!isAuth()">Авторизация</router-link>
+        <router-link to="/" class="me-3 py-2 text-dark text-decoration-none" v-show="isAuth()" @click="logout">Выйти из аккаунта</router-link>
+        <router-link to="orders" class="me-3 py-2 text-dark text-decoration-none" v-show="isAuth()">Мои заказы</router-link>
+        <router-link to="basket" class="me-3 py-2 text-dark text-decoration-none" v-show="isAuth()">Корзина</router-link>
       </nav>
-    </div>
-
-    <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-      <h1 class="display-4 fw-normal">Каталог товаров</h1>
     </div>
   </header>
   <router-view></router-view>
 </template>
 
 <script>
-export default {
+import { mapGetters, mapActions } from 'vuex'
 
+export default {
+  data () {
+    return {
+
+    }
+  },
+  methods: {
+    ...mapGetters({
+      isAuth: 'getUserIsAuth'
+    }),
+    ...mapActions({
+      logout: 'logout'
+    })
+  }
 }
 </script>
 
